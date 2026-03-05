@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.CryptoAPIs-io/mcp-hd-wallet",
-  "description": "MCP server for HD wallet management, balance retrieval, and sync on EVM, UTXO, and XRP blockchains via Crypto APIs",
+  "description": "MCP server for HD wallet management, balance, and sync on EVM, UTXO, XRP via Crypto APIs",
   "repository": {
     "url": "https://github.com/CryptoAPIs-io/cryptoapis-mcp-hd-wallet",
     "source": "github"
   },
-  "version": "0.2.2",
+  "version": "0.2.3",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@cryptoapis-io/mcp-hd-wallet",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "transport": {
         "type": "stdio"
       },
