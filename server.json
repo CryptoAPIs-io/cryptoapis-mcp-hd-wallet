@@ -6,12 +6,12 @@
     "url": "https://github.com/CryptoAPIs-io/cryptoapis-mcp-hd-wallet",
     "source": "github"
   },
-  "version": "0.2.3",
+  "version": "0.2.4",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@cryptoapis-io/mcp-hd-wallet",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "transport": {
         "type": "stdio"
       },
