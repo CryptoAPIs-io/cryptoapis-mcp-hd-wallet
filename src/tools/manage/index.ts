@@ -1,4 +1,4 @@
-import type { CryptoApisHttpClient, RequestResult, DangerousActionMap } from "@cryptoapis-io/mcp-shared";
+import type { CryptoApisHttpClient, RequestResult, DangerousActionMap, McpLogger } from "@cryptoapis-io/mcp-shared";
 import { requiresConfirmation, buildConfirmationPreview, formatDangerousActionsWarning } from "@cryptoapis-io/mcp-shared";
 import type { McpToolDef } from "../types.js";
 import { ManageHdWalletToolSchema, type ManageHdWalletToolInput } from "./schema.js";
@@ -38,7 +38,7 @@ Actions:
 • get-status: Check the sync status of a wallet (syncing, synced, etc.)${formatDangerousActionsWarning(DANGEROUS_ACTIONS)}`,
     credits: { "sync-wallet": syncCredits, "list-wallets": listCredits, "activate-wallet": activateCredits, "delete-wallet": deleteCredits, "get-status": getStatusCredits },
     inputSchema: ManageHdWalletToolSchema,
-    handler: (client: CryptoApisHttpClient) => async (input: ManageHdWalletToolInput) => {
+    handler: (client: CryptoApisHttpClient, logger: McpLogger) => async (input: ManageHdWalletToolInput) => {
         const dangerousAction = await requiresConfirmation(input.action, DANGEROUS_ACTIONS, input.confirmationToken);
         if (dangerousAction) {
             return await buildConfirmationPreview(input.action, dangerousAction, ACTION_CREDITS[input.action]);
@@ -87,7 +87,21 @@ Actions:
                     context: input.context,
                 });
                 break;
+            default:
+                throw new Error(`Unknown action: ${(input as { action: string }).action}`);
         }
+
+        logger.logInfo({
+            tool: "manage_hd_wallet",
+            action: input.action,
+            blockchain: input.blockchain,
+            network: input.network,
+            creditsConsumed: result.creditsConsumed,
+            creditsAvailable: result.creditsAvailable,
+            responseTime: result.responseTime,
+            throughputUsage: result.throughputUsage,
+        });
+
         return { content: [{ type: "text", text: JSON.stringify({ ...(result.data as object), creditsConsumed: result.creditsConsumed, creditsAvailable: result.creditsAvailable, responseTime: result.responseTime, throughputUsage: result.throughputUsage }) }] };
     },
 };

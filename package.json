@@ -1,6 +1,6 @@
 {
   "name": "@cryptoapis-io/mcp-hd-wallet",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "MCP server for HD wallet management, balance, and sync on EVM, UTXO, XRP via Crypto APIs",
   "license": "MIT",
   "author": "Crypto APIs, Inc.",

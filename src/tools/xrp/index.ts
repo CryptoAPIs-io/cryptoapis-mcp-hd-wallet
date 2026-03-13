@@ -1,4 +1,4 @@
-import type { CryptoApisHttpClient, RequestResult } from "@cryptoapis-io/mcp-shared";
+import type { CryptoApisHttpClient, RequestResult, McpLogger } from "@cryptoapis-io/mcp-shared";
 import type { McpToolDef } from "../types.js";
 import { HdWalletDataXrpToolSchema, type HdWalletDataXrpToolInput } from "./schema.js";
 import * as api from "../../api/xrp/index.js";
@@ -22,7 +22,7 @@ Actions:
         "get-details": credits.getDetailsCredits,
     },
     inputSchema: HdWalletDataXrpToolSchema,
-    handler: (client: CryptoApisHttpClient) => async (input: HdWalletDataXrpToolInput) => {
+    handler: (client: CryptoApisHttpClient, logger: McpLogger) => async (input: HdWalletDataXrpToolInput) => {
         const base = { network: input.network!, extendedPublicKey: input.extendedPublicKey!, context: input.context };
         let result: RequestResult<unknown>;
         switch (input.action) {
@@ -41,7 +41,20 @@ Actions:
             case "get-details":
                 result = await api.getDetails(client, base);
                 break;
+            default:
+                throw new Error(`Unknown action: ${(input as { action: string }).action}`);
         }
+
+        logger.logInfo({
+            tool: "hd_wallet_data_xrp",
+            action: input.action,
+            network: input.network,
+            creditsConsumed: result.creditsConsumed,
+            creditsAvailable: result.creditsAvailable,
+            responseTime: result.responseTime,
+            throughputUsage: result.throughputUsage,
+        });
+
         return { content: [{ type: "text", text: JSON.stringify({ ...(result.data as object), creditsConsumed: result.creditsConsumed, creditsAvailable: result.creditsAvailable, responseTime: result.responseTime, throughputUsage: result.throughputUsage }) }] };
     },
 };

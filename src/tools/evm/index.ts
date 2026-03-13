@@ -1,4 +1,4 @@
-import type { CryptoApisHttpClient, RequestResult } from "@cryptoapis-io/mcp-shared";
+import type { CryptoApisHttpClient, RequestResult, McpLogger } from "@cryptoapis-io/mcp-shared";
 import type { McpToolDef } from "../types.js";
 import { HdWalletDataEvmToolSchema, type HdWalletDataEvmToolInput } from "./schema.js";
 import * as api from "../../api/evm/index.js";
@@ -24,7 +24,7 @@ Actions:
         "get-details": credits.getDetailsCredits,
     },
     inputSchema: HdWalletDataEvmToolSchema,
-    handler: (client: CryptoApisHttpClient) => async (input: HdWalletDataEvmToolInput) => {
+    handler: (client: CryptoApisHttpClient, logger: McpLogger) => async (input: HdWalletDataEvmToolInput) => {
         const base = { blockchain: input.blockchain!, network: input.network!, extendedPublicKey: input.extendedPublicKey!, context: input.context };
         let result: RequestResult<unknown>;
         switch (input.action) {
@@ -53,7 +53,21 @@ Actions:
             case "get-details":
                 result = await api.getDetails(client, base);
                 break;
+            default:
+                throw new Error(`Unknown action: ${(input as { action: string }).action}`);
         }
+
+        logger.logInfo({
+            tool: "hd_wallet_data_evm",
+            action: input.action,
+            blockchain: input.blockchain,
+            network: input.network,
+            creditsConsumed: result.creditsConsumed,
+            creditsAvailable: result.creditsAvailable,
+            responseTime: result.responseTime,
+            throughputUsage: result.throughputUsage,
+        });
+
         return { content: [{ type: "text", text: JSON.stringify({ ...(result.data as object), creditsConsumed: result.creditsConsumed, creditsAvailable: result.creditsAvailable, responseTime: result.responseTime, throughputUsage: result.throughputUsage }) }] };
     },
 };
