@@ -1,3 +1,4 @@
+import { DESTRUCTIVE_TOOL } from "@cryptoapis-io/mcp-shared";
 import type { CryptoApisHttpClient, RequestResult, DangerousActionMap, McpLogger } from "@cryptoapis-io/mcp-shared";
 import { requiresConfirmation, buildConfirmationPreview, formatDangerousActionsWarning } from "@cryptoapis-io/mcp-shared";
 import type { McpToolDef } from "../types.js";
@@ -28,6 +29,8 @@ const ACTION_CREDITS: Record<string, number> = {
 
 export const manageHdWalletTool: McpToolDef<typeof ManageHdWalletToolSchema> = {
     name: "manage_hd_wallet",
+    title: "Manage HD wallets",
+    annotations: DESTRUCTIVE_TOOL,
     description: `Manage HD wallets identified by extended public key (xPub/yPub/zPub). Private keys never leave the user's device — only the extended public key is sent to CryptoAPIs for address derivation and balance tracking.
 
 Actions:

@@ -1,3 +1,4 @@
+import { WRITE_TOOL } from "@cryptoapis-io/mcp-shared";
 import type { CryptoApisHttpClient, RequestResult, McpLogger } from "@cryptoapis-io/mcp-shared";
 import type { McpToolDef } from "../types.js";
 import { HdWalletDataUtxoToolSchema, type HdWalletDataUtxoToolInput } from "./schema.js";
@@ -6,6 +7,8 @@ import * as credits from "./credits.js";
 
 export const hdWalletDataUtxoTool: McpToolDef<typeof HdWalletDataUtxoToolSchema> = {
     name: "hd_wallet_data_utxo",
+    title: "UTXO HD wallet data",
+    annotations: WRITE_TOOL,
     description: `Query HD wallet data for UTXO blockchains (bitcoin, litecoin, bitcoin-cash, dogecoin, dash, zcash) by extended public key (xPub/yPub/zPub). The wallet must first be synced via manage_hd_wallet. Offset pagination: use 'limit' and 'offset' for paged results.
 
 Actions:

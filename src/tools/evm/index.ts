@@ -1,3 +1,4 @@
+import { WRITE_TOOL } from "@cryptoapis-io/mcp-shared";
 import type { CryptoApisHttpClient, RequestResult, McpLogger } from "@cryptoapis-io/mcp-shared";
 import type { McpToolDef } from "../types.js";
 import { HdWalletDataEvmToolSchema, type HdWalletDataEvmToolInput } from "./schema.js";
@@ -6,6 +7,8 @@ import * as credits from "./credits.js";
 
 export const hdWalletDataEvmTool: McpToolDef<typeof HdWalletDataEvmToolSchema> = {
     name: "hd_wallet_data_evm",
+    title: "EVM HD wallet data",
+    annotations: WRITE_TOOL,
     description: `Query HD wallet data for EVM blockchains by extended public key (xPub). The wallet must first be synced via manage_hd_wallet. Offset pagination: use 'limit' and 'offset' for paged results.
 
 Actions:
